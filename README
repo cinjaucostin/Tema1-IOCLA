@@ -1,0 +1,68 @@
+->Functia touch:
+    -am facut o functie auxiliara ce aloca memorie pentru un fisier si face legaturile necesare cu parintele;
+    -verificam daca lista de fisiere este nula, in cazul in care era inseram noul fisier in ea, in cazul in care nu era verificam daca exista
+deja un fisier cu acel nume si in caz ca nu exista inseram noul fisier la sfarsitul listei;
+
+->Functia mkdir:
+    -in mare aceeasi idee ca la functia touch doar ca aplicata pentru element de tip director;
+
+->Functia ls:
+    -luam niste pointeri auxiliari:unul de tip File si unul de tip Dir pentru a putea parcurge lista de directoare, respectiv fisiere a 
+directorului curent si le afisam numele la fiecare in parte;
+
+->Functia rm:
+    -verificam daca lista de fisiere este nula, iar in acest caz afisam mesajul specific(nu aveam ce fisier sa eliminam din lista);
+    -in caz ca fisierul exista il eliminam si de asemenea eliberam memoria ocupata de acesta;
+    -am mers pe 2 cazuri:cazul in care fisierul era prima din lista si cazul in care acesta era mai avansat de prima pozitie in lista;
+
+->Functia rmdir:
+    -pe aceeasi idee ca si la rm doar ca de aceasta data atunci cand gaseam directorul de trebuie eliminat, am folosit functia stop pentru a elibera
+memoria ocupata de tot ceea ce tinea de acel director(listele sale proprii de directoare si fisiere);
+    -practic odata ce eliminam un director, eliminam tot ce se afla sub el in ierarhia de directoare si fisiere;
+
+->Functia stop:
+    -am definit-o recursiv pentru a putea trece prin fiecare director al sistemului si a elibera atat memoria ocupata de lista sa de fisiere(prin functia
+auxiliara elibereaza_fisiere) cat si memoria ocupata de el in sine;
+
+->Functia cd:
+    -aveam doua cazuri:
+        *daca primeam ca parametru numele directorului in care trebuie sa ne mutam "..", atunci mergeam in parintele directorului curent(*target)=(*target)->parent), iar daca
+directorul curent era directorul home atunci nu modificam nimic;
+        *cazul in care primeam un nume de fisier diferit de ce aveam la celalalt caz si mergeam practic prin lista de directoare a directorului curent si
+daca gaseam directorul dorit atunci faceam *target=parcurgere_lista_directoare;
+
+->Functia pwd:
+    -m-am folosit de un pointer auxiliar Dir prin care sa iterez in sus(in directorul parinte al directorului curent si tot asa);
+    -de fiecare data treceam numele directorului prin care am trecut intr-o "matrice de cuvinte";
+    -ne opream cand pointerul auxiliar devenea null;
+    -dupa ce terminam de iterat prin directoare aveam practic o matrice de cuvinte reprezentand calea catre directorul in care eram dar in ordine inversa;
+    -tot ce a trebuit sa fac dupa a fost sa parcurg matricea de cuvinte invers si sa ma folosesc de strcat pentru a concatena niste stringuri, reprezentand numele directoarelor
+ce apartin caii;
+
+->Functia tree:
+    -am definit-o ca fiind o functie recursiva;
+    -verificarea level>=0 este pentru ca am apelat functia in main pentru directorul parinte iar noi nu doream sa facem afisarea numelui sau;
+    -practic treceam prin fiecare director al sistemului si la finalul functiei afisam lista de fisiere deoarece ordinea de afisare era numele directorului
+si dupa numele fisierelor;
+
+->Functia mv:
+    -am definit o functie auxiliara cauta_director_sau_fisier care primeste un nume si afla daca numele oferit este numele unui fisier din lista(intoarce 1),
+numele unui director din lista(returneaza 2) sau daca nu exista in niciuna din liste(returneaza 0);
+    -in functie de ce returna functia cauta_director_sau_fisier aplicam urmatorii pasi:daca fisierul/directorul pe care doream sa il redenumim nu exista sau
+exista deja un fisier cu numele cu care noi doream sa il redenumim afisam mesajele aferente;
+    -daca elementul pe care doream sa il redenumim era un fisier atunci eliminam fisierul din lista si adaugam altul cu un nou nume;
+    -daca elementul pe care doream sa il redenumim era un director atunci eliminam directorul din lista si adaugam altul cu un nou nume;
+
+->Functia main:
+    -in functia main m-am folosit inca o data de o matrice de cuvinte astfel:
+        *introduceam in matricea de cuvinte toate cuvintele de pe o linie citita astfel incat in matricea aveam un numar k de elemente;
+        *daca k=1, inseamna ca in matrice este un singur cuvant: deci avem de efectuat o comanda fara niciun argument oferit in plus, mai exact o comanda de genul:
+ls, pwd, tree sau stop;
+        *daca k=2, inseamna ca in matrice avem doua cuvinte, adica ne asteptam sa avem de rezolvat o operatie de genul: touch, mkdir, cd, rm, rmdir, pe numele
+ce reprezinta practic al doilea cuvant din matrice;
+        *daca k=3, inseamna ca avem 3 cuvinte in matricea de cuvinte, deci avem de efectuat o operatie de genul mv;
+    -un exemplu pentru a intelege mai bine:
+        Introducem de la tastatura "pwd" => comenzi[0]=pwd;
+        Introducem de la tastatura "touch f1" => comenzi[0]="touch", comenzi[1]="f1";
+        Introducem de la tastatura "mv name1 name2" => comenzi[0]="mv", comenzi[1]="name1", comenzi[2]="name2";
+
